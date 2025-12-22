@@ -1,0 +1,6 @@
+kapiVersion: v2
+name: library-app
+description: A Helm chart for Kubernetes Library Management System
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

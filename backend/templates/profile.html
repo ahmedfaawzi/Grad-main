@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Library Management System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .nav { background: #333; color: white; padding: 10px; margin-bottom: 20px; }
+        .nav a { color: white; margin-right: 15px; text-decoration: none; }
+        .profile { background: #f5f5f5; padding: 20px; border-radius: 5px; max-width: 500px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    
+    <h1>Your Profile</h1>
+    
+    <div class="profile">
+        <p><strong>User ID:</strong> {{ user_id }}</p>
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Full Name:</strong> {{ full_name }}</p>
+        <p><strong>Role:</strong> {{ role }}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-app
+  namespace: cls
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: library-app
+      type: backend
+  template:
+    metadata:
+      labels:
+        app: library-app
+        type: backend
+    spec:
+      containers:
+      - name: library-container
+        image: library-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-url
+              key: url
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
