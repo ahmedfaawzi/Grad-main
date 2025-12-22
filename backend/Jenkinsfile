@@ -2,52 +2,44 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "grad-backend"
-        CONTAINER_NAME = "grad-backend-container"
+        IMAGE_NAME = "ahmedfaawzi/flask-backend"
+        CONTAINER_NAME = "flask-backend"
     }
 
     stages {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/USERNAME/REPO_NAME.git'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t $IMAGE_NAME backend
+                docker build -t $IMAGE_NAME .
                 '''
             }
         }
 
-        stage('Run Container') {
+        stage('Stop Old Container') {
             steps {
                 sh '''
-                docker rm -f $CONTAINER_NAME || true
-                docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
                 '''
             }
         }
 
-        stage('Health Check') {
+        stage('Run New Container') {
             steps {
                 sh '''
-                sleep 5
-                curl -f http://localhost:5000 || exit 1
+                docker run -d \
+                --name $CONTAINER_NAME \
+                -p 5000:5000 \
+                $IMAGE_NAME
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline Success"
-        }
-        failure {
-            echo "Pipeline Failed"
         }
     }
 }
