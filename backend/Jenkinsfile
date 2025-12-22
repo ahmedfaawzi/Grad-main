@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 checkout scm
@@ -12,8 +11,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                  cd backend
-                  docker build -t flask-backend .
+                cd backend
+                sudo docker build -t flask-backend .
                 '''
             }
         }
@@ -21,7 +20,7 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 sh '''
-                  docker rm -f flask-backend || true
+                sudo docker rm -f flask-backend || true
                 '''
             }
         }
@@ -29,10 +28,10 @@ pipeline {
         stage('Run New Container') {
             steps {
                 sh '''
-                  docker run -d \
-                    --name flask-backend \
-                    -p 5000:5000 \
-                    flask-backend
+                sudo docker run -d \
+                  --name flask-backend \
+                  -p 5000:5000 \
+                  flask-backend
                 '''
             }
         }
