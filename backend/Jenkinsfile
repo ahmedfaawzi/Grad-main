@@ -9,26 +9,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build & Run with Docker Compose') {
             steps {
                 sh '''
-                  cd backend
-                  sudo docker build -t flask-backend .
-                '''
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                sh '''
-                  sudo docker rm -f flask-backend || true
-                  sudo docker run -d \
-                    --name flask-backend \
-                    -p 5000:5000 \
-                    flask-backend
+                  cd ..
+                  sudo docker compose down || true
+                  sudo docker compose up -d --build
                 '''
             }
         }
     }
 }
-
