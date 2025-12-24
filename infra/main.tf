@@ -25,7 +25,7 @@ data "aws_subnet" "default" {
 ############################
 
 resource "aws_security_group" "jenkins_sg" {
-  name        = "jenkins-sg-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+  name        = "jenkins-sg"
   description = "Security group for Jenkins Controller"
   vpc_id      = data.aws_vpc.default.id
 
@@ -66,15 +66,15 @@ resource "aws_security_group" "jenkins_sg" {
 }
 
 ############################
-# SSH Key Pair (NEW)
+# SSH Key Pair (FIXED)
 ############################
 
 resource "aws_key_pair" "jenkins_key" {
   key_name   = "jenkins-new-key"
-  public_key = file("~/.ssh/jenkins-new-key.pub")
+  public_key = file("${path.module}/jenkins.pub")
 
   tags = {
-    Name = "Jenkins New Key"
+    Name = "Jenkins-Key"
   }
 }
 
@@ -108,23 +108,18 @@ resource "aws_instance" "jenkins_controller" {
     #!/bin/bash
     yum update -y
 
-    # Java
     amazon-linux-extras install java-openjdk11 -y
 
-    # Jenkins
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     yum install jenkins -y
 
-    sed -i 's/JENKINS_ARGS=""/JENKINS_ARGS="--httpListenAddress=0.0.0.0"/' /etc/sysconfig/jenkins
-
     systemctl enable jenkins
     systemctl start jenkins
 
-    # Git & Docker
     yum install git docker -y
-    systemctl start docker
     systemctl enable docker
+    systemctl start docker
     usermod -aG docker jenkins
 
     systemctl restart jenkins
@@ -161,9 +156,5 @@ output "jenkins_url" {
 }
 
 output "ssh_command" {
-  value = "ssh -o IdentitiesOnly=yes -i ~/.ssh/jenkins-new-key ec2-user@${aws_eip.jenkins_eip.public_ip}"
-}
-
-output "password_command" {
-  value = "ssh -i ~/.ssh/jenkins-new-key ec2-user@${aws_eip.jenkins_eip.public_ip} 'sudo cat /var/lib/jenkins/secrets/initialAdminPassword'"
+  value = "ssh -i jenkins-new-key ec2-user@${aws_eip.jenkins_eip.public_ip}"
 }
