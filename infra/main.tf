@@ -75,7 +75,7 @@ resource "aws_instance" "jenkins_controller" {
   subnet_id     = data.aws_subnet.default.id
 
   # ✅ key موجود مسبقًا
-  key_name = "jenkins-new-key"
+  key_name = "jenkins-final-key"
 
   vpc_security_group_ids = [
     aws_security_group.jenkins_sg.id
