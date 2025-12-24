@@ -66,19 +66,6 @@ resource "aws_security_group" "jenkins_sg" {
 }
 
 ############################
-# SSH Key Pair (FIXED)
-############################
-
-resource "aws_key_pair" "jenkins_key" {
-  key_name   = "jenkins-new-key"
-  public_key = file("${path.module}/jenkins.pub")
-
-  tags = {
-    Name = "Jenkins-Key"
-  }
-}
-
-############################
 # EC2 Jenkins Controller
 ############################
 
@@ -86,7 +73,9 @@ resource "aws_instance" "jenkins_controller" {
   ami           = "ami-0557a15b87f6559cf" # Amazon Linux 2
   instance_type = "t2.medium"
   subnet_id     = data.aws_subnet.default.id
-  key_name      = aws_key_pair.jenkins_key.key_name
+
+  # ✅ key موجود مسبقًا
+  key_name = "jenkins-new-key"
 
   vpc_security_group_ids = [
     aws_security_group.jenkins_sg.id
@@ -156,5 +145,5 @@ output "jenkins_url" {
 }
 
 output "ssh_command" {
-  value = "ssh -i jenkins-new-key ec2-user@${aws_eip.jenkins_eip.public_ip}"
+  value = "ssh -i ~/.ssh/jenkins-new-key ec2-user@${aws_eip.jenkins_eip.public_ip}"
 }
