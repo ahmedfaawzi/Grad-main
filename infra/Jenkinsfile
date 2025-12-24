@@ -1,7 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"
+    }
+
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -10,29 +15,31 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh '''
-                  cd infra
-                  terraform init
-                '''
+                dir('infra') {
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh '''
-                  cd infra
-                  terraform plan
-                '''
+                dir('infra') {
+                    sh 'terraform plan'
+                }
             }
         }
 
         stage('Terraform Apply') {
+            when {
+                branch 'main'
+            }
             steps {
-                sh '''
-                  cd infra
-                  terraform apply -auto-approve
-                '''
+                dir('infra') {
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
     }
 }
+
+
