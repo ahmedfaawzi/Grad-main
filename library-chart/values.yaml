@@ -1,17 +1,16 @@
 replicaCount: 3
 
 image:
-  repository: library-app
-  pullPolicy: IfNotPresent
-  tag: "latest"
+  repository: ahmedfaawzi/library-app
+  tag: latest
+  pullPolicy: Always
 
 nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: NodePort
+  type: LoadBalancer
   port: 5000
-  nodePort: 30301
 
 ingress:
   enabled: false
@@ -41,4 +40,7 @@ postgresql:
     size: 1Gi
 
 env:
-  database_url: "postgresql://library_user:library_password@library-app-postgres:5432/library"
+  database_url: "postgresql://library_user:library_password@library-db-postgresql:5432/library"
+
+imagePullSecrets:
+  - name: dockerhub-secret

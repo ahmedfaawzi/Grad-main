@@ -14,6 +14,8 @@ spec:
       labels:
         {{- include "library-app.selectorLabels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
