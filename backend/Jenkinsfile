@@ -12,9 +12,9 @@ pipeline {
         stage('Build & Run with Docker Compose') {
             steps {
                 sh '''
-                  cd ..
-                  /usr/bin/docker-compose down || true
-                  /usr/bin/docker-compose up -d --build
+                  /usr/bin/docker-compose -f ../docker-compose.yml down || true
+                  /usr/bin/docker-compose -f ../docker-compose.yml up -d --build
+
 
                 '''
             }
