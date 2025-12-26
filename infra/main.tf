@@ -53,7 +53,7 @@ resource "aws_instance" "jenkins_controller" {
   EOF
 
   tags = {
-    Name = "Jenkins-Controller-Final"
+    Name = "Jenkins-Controller-test"
   }
 }
 
