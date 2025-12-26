@@ -6,6 +6,8 @@ from datetime import datetime
 import logging
 from dotenv import load_dotenv
 
+APP_VERSION = "2.3.0"
+
 # تحميل متغيرات البيئة
 load_dotenv()
 
@@ -371,6 +373,17 @@ if __name__ == "__main__":
     host = os.getenv('HOST', '0.0.0.0')
     debug = os.getenv('DEBUG', 'False').lower() == 'true'
     
-    logger.info(f"Starting Library Management System on {host}:{port}")
-    logger.info(f"Using credentials from: {'KMS' if 'DB_PASSWORD' in CREDENTIALS and CREDENTIALS['DB_PASSWORD'] else 'ENV'}")
+    logger.info("======================================")
+    logger.info("🚀 Starting Library Management System")
+    logger.info(f"📦 Version: {APP_VERSION}")
+    logger.info(f"🌐 Host: {host} | Port: {port}")
+    logger.info(f"🔐 Credentials Source: {'KMS' if 'DB_PASSWORD' in CREDENTIALS and CREDENTIALS['DB_PASSWORD'] else 'ENV'}")
+    logger.info("======================================")
+
+    print("======================================")
+    print("🚀 Starting Library Management System")
+    print(f"📦 Version: {APP_VERSION}")
+    print(f"🌐 Host: {host} | Port: {port}")
+    print("======================================")
+
     app.run(host=host, port=port, debug=debug)
