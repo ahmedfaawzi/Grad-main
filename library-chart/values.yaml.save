@@ -1,0 +1,46 @@
+ repository: ahmedfaawzi/library-app
+  tag: latest
+  pullPolicy: AlwaysreplicaCount: 3
+
+image:
+  repository: library-app
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: NodePort
+  port: 5000
+  nodePort: 30301
+
+ingress:
+  enabled: false
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+postgresql:
+  enabled: true
+  image: "postgres:13"
+  database: "library"
+  username: "library_user"
+  password: "library_password"
+  persistence:
+    enabled: true
+    size: 1Gi
+
+env:
+  database_url: "postgresql://library_user:library_password@library-app-postgres:5432/library"
