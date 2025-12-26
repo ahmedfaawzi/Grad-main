@@ -16,38 +16,16 @@ data "aws_subnet" "default" {
 }
 
 ############################
-# Security Group (اسم مختلف)
+# Existing Security Group
 ############################
 
-resource "aws_security_group" "jenkins_sg" {
-  name        = "jenkins-sg-final"
-  description = "Security group for Jenkins Controller"
-  vpc_id      = data.aws_vpc.default.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+data "aws_security_group" "jenkins_sg" {
+  name   = "jenkins-sg-final"
+  vpc_id = data.aws_vpc.default.id
 }
 
 ############################
-# EC2 Jenkins
+# EC2 Jenkins Controller
 ############################
 
 resource "aws_instance" "jenkins_controller" {
@@ -58,7 +36,7 @@ resource "aws_instance" "jenkins_controller" {
   key_name = "jenkins-terraform-key"
 
   vpc_security_group_ids = [
-    aws_security_group.jenkins_sg.id
+    data.aws_security_group.jenkins_sg.id
   ]
 
   associate_public_ip_address = true
@@ -80,7 +58,7 @@ resource "aws_instance" "jenkins_controller" {
 }
 
 ############################
-# Output
+# Outputs
 ############################
 
 output "ssh_command" {
